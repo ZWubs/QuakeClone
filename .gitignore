@@ -9,8 +9,8 @@
 !*/
 
 # Unignore some special cases
-makefile
-LICENSE
+/makefile
+/LICENSE
 
 ## Common compiled / precompiled extensions:
 # Prerequisites
