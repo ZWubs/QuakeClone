@@ -13,9 +13,15 @@ sf::Vector2i vMap( 16, 16 );
 
 sf::Vector2f vPlayer( 8.0, 8.0 );
 float fPlayerA = 1.0f;			// Player Start Rotation
-float fFOV = 3.14159f / 2.5f;	// Field of View
+float fFOV = 3.14159f / 2.5f;	// Field of View (3.14159f / 4.0f; = 45deg fov)
 float fRenderDistance = 16.0f;	// Maximum rendering distance
 float fSpeed = 2.0f;			// Walking Speed
+
+// Default Colors
+sf::Color wallColor(250, 175, 175);
+sf::Color floorColor(20, 150, 50);
+sf::Color skyColor(0, 100, 200);
+sf::Color fogColor(0, 100, 200);
 
 
 int main() {
@@ -67,6 +73,10 @@ int main() {
 		}
 
         // Keyboard Inputs
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			window.close();	// TODO: Launch a menu with resume, options, and close.
+		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 			fPlayerA -= fSpeed * 0.5f * dt.asSeconds();
 		}
@@ -186,18 +196,29 @@ int main() {
 				int drawEnd = iWallHeight / 2 + vScreen.y / 2;
 				if(drawEnd >= vScreen.y) drawEnd = vScreen.y - 1;
 
-				int iColor = 0;
-				if( fRayDistance < fRenderDistance )
-					iColor = ( fRenderDistance - fRayDistance ) * 16;
+				float fogMix = 1;	// 0 = wall, 1 = fog
+				if( /*fRenderDistance != 0 &&*/ fRayDistance < fRenderDistance ) {
 
-				if( iSide == 0 )
-					iColor *= 0.75f;
+					fogMix = ( fRayDistance / fRenderDistance );	// + 1
+					if (fogMix > 1) fogMix = 1;
+					else if (fogMix < 0) fogMix = 0;
+					// if ( iSide == 0 ) fogMix *=0.75;	// Darken based on N/S or E/W walls. looks a little odd at a distance. use to darken wall color directly instead
 
+					// TODO: fog start distance
+					// TODO: Better Edge/corner shading for visability (Fake AO) (store a depth pass, then do a color pass???)
+				}
+
+				sf::Color finalWallColor(	// for something better, see https://www.alanzucconi.com/2016/01/06/colour-interpolation/
+					(wallColor.r + (fogColor.r - wallColor.r) * fogMix),
+					(wallColor.g + (fogColor.g - wallColor.g) * fogMix),
+					(wallColor.b + (fogColor.b - wallColor.b) * fogMix)
+				);
+
+				// Draw colors to screen
 				for( int y = 0; y < vScreen.y; y++ ) {
-
-					if( y < drawStart ) buffer.setPixel( x, y, sf::Color( 16, 16, 16 ) );
-					else if( y < drawEnd ) buffer.setPixel( x, y, sf::Color( iColor, iColor, iColor ) );
-					else buffer.setPixel( x, y, sf::Color( 64, 64, 64 ) );
+					if( y > drawStart && y <= drawEnd ) buffer.setPixel( x, y, finalWallColor );
+					else if( y > (vScreen.y/2) ) buffer.setPixel( x, y, floorColor );
+					else buffer.setPixel( x, y, skyColor );
 
 				}
 
