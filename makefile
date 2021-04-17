@@ -1,4 +1,5 @@
-LIBS=-lsfml-graphics -lsfml-window -lsfml-system
+LIBS= -lsfml-graphics -lsfml-window -lsfml-system
+OPENGL= -lGLEW -lGL
 
 all:
 	@echo "Building the game engine..."
@@ -8,7 +9,7 @@ all:
 dda:
 	@echo "Building DDA test..."
 	g++ -c dda.cpp -o dda.o
-	g++ -o dda.out dda.o $(LIBS)
+	g++ -o dda.out dda.o $(LIBS) $(OPENGL)
 
 test:
 	@echo "Building DDA test..."

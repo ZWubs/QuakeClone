@@ -3,6 +3,7 @@
 #define PI 3.1415926535
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 
 using namespace std;
@@ -12,16 +13,17 @@ sf::Vector2i vMap( 16, 16 );
 
 sf::Vector2f vPlayer( 8.0, 8.0 );
 float fPlayerA = 1.0f;			// Player Start Rotation
-float fFOV = 3.14159f / 4.0f;	// Field of View
+float fFOV = 3.14159f / 2.5f;	// Field of View
 float fRenderDistance = 16.0f;	// Maximum rendering distance
 float fSpeed = 2.0f;			// Walking Speed
 
 
 int main() {
 
-	cout << "A";
 
-	sf::RenderWindow window(sf::VideoMode( vScreen.x, vScreen.y), "DDA Ray Casting");
+	sf::RenderWindow window(sf::VideoMode( vScreen.x, vScreen.y), "DDA Ray Casting" );
+
+	window.setFramerateLimit( 30 );
 
 	sf::Image buffer;
 	buffer.create( vScreen.x, vScreen.y, sf::Color(0, 0, 0) );
@@ -163,6 +165,13 @@ int main() {
 
 			fRayDistance = 0.0f;
 
+			/*
+				OpenGL
+				Vertex Attributes for Color
+				UV for textering
+				line textures...
+			*/
+
 			if( bWallHit ) {
 
 				if( iSide == 0 ) fRayDistance = ( vMapPosition.x - vPlayer.x + ( 1.0f - vStep.x ) / 2.0f ) / vRayDir.x;
@@ -186,8 +195,9 @@ int main() {
 
 				for( int y = 0; y < vScreen.y; y++ ) {
 
-					if( y > drawStart && y <= drawEnd ) buffer.setPixel( x, y, sf::Color( iColor, iColor, iColor ) );
-					else buffer.setPixel( x, y, sf::Color( 16, 16, 16 ) );
+					if( y < drawStart ) buffer.setPixel( x, y, sf::Color( 16, 16, 16 ) );
+					else if( y < drawEnd ) buffer.setPixel( x, y, sf::Color( iColor, iColor, iColor ) );
+					else buffer.setPixel( x, y, sf::Color( 64, 64, 64 ) );
 
 				}
 
