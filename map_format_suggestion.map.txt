@@ -1,0 +1,61 @@
+// Comment				// Everything after a // should be ignored (New line resets)
+
+16x16					// First non-comment item: map dimensions. int, "x", int.
+################		// We then track the next set of characters based on
+#..............#		// the dimensions given above. Theoretically, if we have
+#.........######		// a known "divider" string, we could totally just count
+#..............#		// the number of non-whitespace characters we see in the
+#.........J....#		// first row, and then the number of non-comment lines
+#..............#		// before the divider to get our dimensions.
+#....WWW.......#
+#....WDW.......#		// Default syntax:
+#..............#		// . = Floor
+#..........P...#		// P = Player start point
+#..............#		// Any other char = wall	(unless otherwise specified)
+#..T...........#
+#..............#		// 0 degrees: up
+#...FFFFFFFF...#		// 90 degrees: Right
+#..............#
+################
+~~~									// 3+ '~': A divider between the map layout and the rest of the body.
+
+Init: PopulateMap("Town")			// Defines a function to run after loading the map.	We can use this
+									// 		for functionality while we set up the rest of the map parsers.
+
+floorColor: 	20, 150, 50			// Colors: RGB. We can treat commas as whitespace here.
+fogColor: 		0, 100, 200
+skyTex: 		Textures/skybox.png	// Path to a texture, starting from some project root location.
+skyType: 		Skybox				// Types = Skybox or ceiling.	(assuming we get these working)
+wallColor: 		250, 175, 175
+
+W: wallColor: 	250, 250, 250		// Tile-specific overrides (one character, followed by a colon.)
+F: wallTex:		Textures/fence.png
+
+B: Type: Entity: Mailbox{"James"}	// Engine assumes every tile that isn't floor is a wall. Type
+T: Type: Sprite: Tree{}				// 		redefines a tile to another type, and runs some constructor.
+D: Type: TileEntity: Door{"James"}	// Tile Entities render like walls, but have entity like update functions.
+									// 		Also more flexible, EG: Checking when a player enters its
+									//		space to warp to another zone. Or a cheeky way to hold, like,
+									// 		5 sprites stacked in front of each other to give a better depth effect
+
+J: Type: Entity: Friend{name: "James", rot: 90}
+
+placeEntity: 	mailbox, 8.2, 5.5, 180	// Manually Places a pre-defined entity into the map.
+									// Type, X, Y, Facing Dir.
+
+// -----------------------------------------------------------------------------
+// This example list is open to suggestion, additions, and changes.
+// It's roughly in order by what I think we should implement first,
+//
+// Implementing `Init` would easily let us fake any of the other options here,
+// but ideally we'd have a tag for every important element of a map.
+//
+// The default color settings should be fairly easy to set up.
+// But it would be amazing if we can get taggable wall colors set up. That would
+// drastically improve potential map design and be a good demo of the tagging
+// system.
+//
+// Most of the Type adjustments can be ignored in favor of making the dev implement
+// an init function for a given map. Same with Place Entity.
+//
+// The syntax might get reworked to a bit more Posix or JSON flavored.
