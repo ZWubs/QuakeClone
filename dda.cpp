@@ -71,6 +71,10 @@ int main() {
 		}
 
         // Keyboard Inputs
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			window.close();	// TODO: Launch a menu with resume, options, and close.
+		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 			fPlayerA -= fSpeed * 0.5f * dt.asSeconds();
 		}
