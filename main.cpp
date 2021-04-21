@@ -1,8 +1,6 @@
 #include <iostream>
 #include <math.h>
 
-#include <gl/glew.h>
-
 #include <SFML/Graphics.hpp>
 
 

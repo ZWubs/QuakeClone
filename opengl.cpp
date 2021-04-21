@@ -3,10 +3,16 @@
 #include <math.h>
 #define PI 3.1415926535
 
+// OpenGL
+#include <GL/glut.h>
+// Ubuntu: sudo apt-get install freeglut3-dev
+// Fedora/RedHat: sudo yum install freeglut-devel
+
 // SFML
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 using namespace std;
 
@@ -35,14 +41,9 @@ int main() {
 
 	window.setFramerateLimit( 30 );
 
-	sf::Image buffer;
-	buffer.create( vScreen.x, vScreen.y, sf::Color(0, 0, 0) );
+	window.setActive( true );
 
-	sf::Texture texture;
-	texture.loadFromImage(buffer);
-
-	sf::Sprite bufferSprite;
-	bufferSprite.setTexture(texture);
+	glClearColor(1.0,0.3,0.3,1.0);
 
 	wstring map;
 	map += L"################";
@@ -61,6 +62,33 @@ int main() {
 	map += L"#.#.#..........#";
 	map += L"#..............#";
 	map += L"################";
+
+	sf::Image img_data;
+	if (!img_data.loadFromFile("./img/stone.png")) {
+	    cout << "Could not load ./img/square.png" << endl;
+	    return false;
+	}
+
+	sf::Vector2u img_size = img_data.getSize();
+
+	unsigned int texture;
+	glGenTextures(1, &texture);
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexImage2D(
+		GL_TEXTURE_2D, 0, GL_RGBA,
+		img_size.x, img_size.y,
+		0,
+		GL_RGBA, GL_UNSIGNED_BYTE, img_data.getPixelsPtr()
+	);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glEnable(GL_TEXTURE_2D);
 
 	// deltaTime Clock
 	sf::Clock deltaClock;
@@ -102,10 +130,35 @@ int main() {
 		/*
 			Clear
 		*/
-		window.clear();
+		//window.clear();
 
-        /*
-			DDA - Intersection Detection
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		/*
+			Floor & Ceiling Intersection Detection
+		*/
+		/*
+		glColor3f( 1.0, 1.0, 1.0 );
+
+		for( int y = 0; y < vScreen.y; y++ ) {
+
+			if( y > vScreen.y / 2 ) {
+
+				float fRayAngle = (fPlayerA - fFOV/2.0f) + ((float)x / (float)vScreen.x) * fFOV;
+				sf::Vector2f vRayDir = sf::Vector2f( cos( fRayAngle ), sin( fRayAngle ) );
+
+				glTexCoord2f( fmod( vIntersection.y, 1.0 ), 0.0 );
+				glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
+				glTexCoord2f( fmod( vIntersection.y, 1.0 ), 1.0 );
+				glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
+
+			}
+
+		}*
+		/
+
+		/*
+			DDA - Wall Intersection Detection
 		*/
 
 		float fRayAngle;
@@ -147,24 +200,28 @@ int main() {
 			vSideDistance.x = ( vRayDir.x < 0 ) ? ( ( vPlayer.x - vMapPosition.x ) * vDeltaDistance.x ) : ( ( vMapPosition.x + 1.0 - vPlayer.x ) * vDeltaDistance.x );
 			vSideDistance.y = ( vRayDir.y < 0 ) ? ( ( vPlayer.y - vMapPosition.y ) * vDeltaDistance.y ) : ( ( vMapPosition.y + 1.0 - vPlayer.y ) * vDeltaDistance.y );
 
+			fRayDistance = 0.0f;
+
 			bWallHit = false;
 
 			while( !bWallHit ) {
 
 				if ( vSideDistance.x < vSideDistance.y ) {
-					vSideDistance.x += vDeltaDistance.x;
 					vMapPosition.x += vStep.x;
+					fRayDistance = vSideDistance.x;
+					vSideDistance.x += vDeltaDistance.x;
 					iSide = 0;
 				}
 				else {
-					vSideDistance.y += vDeltaDistance.y;
 					vMapPosition.y += vStep.y;
+					fRayDistance = vSideDistance.y;
+					vSideDistance.y += vDeltaDistance.y;
 					iSide = 1;
 				}
 
 				if( ( ( vMapPosition.x >= 0 ) && ( vMapPosition.x < vMap.x ) ) && ( ( vMapPosition.y >= 0 ) && ( vMapPosition.y < vMap.y ) ) ) {
 
-					if ( map.c_str()[vMapPosition.y * vMap.y + vMapPosition.x ] == '#' ) {
+					if ( map.c_str()[ vMapPosition.y * vMap.y + vMapPosition.x ] == '#' ) {
 
 						bWallHit = true;
 
@@ -177,65 +234,39 @@ int main() {
 
 			}
 
-			fRayDistance = 0.0f;
-
-			/*
-				OpenGL
-				Vertex Attributes for Color
-				UV for textering
-				line textures...
-			*/
-
 			if( bWallHit ) {
 
-				if( iSide == 0 ) fRayDistance = ( vMapPosition.x - vPlayer.x + ( 1.0f - vStep.x ) / 2.0f ) / vRayDir.x;
-				else fRayDistance = ( vMapPosition.y - vPlayer.y + ( 1.0f - vStep.y ) / 2.0f ) / vRayDir.y;
+				sf::Vector2f vIntersection = vPlayer + vRayDir * fRayDistance;
 
 				fRayDistance *= cosf( fPlayerA - fRayAngle );
 
-				iWallHeight = (int)( (float)vScreen.y / fRayDistance );
+				glLineWidth(2);
 
-				int drawStart = -iWallHeight / 2 + vScreen.y / 2;
-				if(drawStart < 0) drawStart = 0;
-				int drawEnd = iWallHeight / 2 + vScreen.y / 2;
-				if(drawEnd >= vScreen.y) drawEnd = vScreen.y - 1;
+				// Wall
+				glBegin(GL_LINES);
 
-				float fogMix = 1;	// 0 = wall, 1 = fog
-				if( /*fRenderDistance != 0 &&*/ fRayDistance < fRenderDistance ) {
+					if( iSide == 0 ) {
+						glColor3f(0.75,0.75,0.75);
+						glTexCoord2f( fmod( vIntersection.y, 1.0 ), 0.0 );
+						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
+						glTexCoord2f( fmod( vIntersection.y, 1.0 ), 1.0 );
+						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
+					}
+					else {
+						glColor3f(1,1,1);
+						glTexCoord2f( fmod( vIntersection.x, 1.0 ), 0.0 );
+						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
+						glTexCoord2f( fmod( vIntersection.x, 1.0 ), 1.0 );
+						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
+					}
 
-					fogMix = ( fRayDistance / fRenderDistance );	// + 1
-					if (fogMix > 1) fogMix = 1;
-					else if (fogMix < 0) fogMix = 0;
-					// if ( iSide == 0 ) fogMix *=0.75;	// Darken based on N/S or E/W walls. looks a little odd at a distance. use to darken wall color directly instead
-
-					// TODO: fog start distance
-					// TODO: Better Edge/corner shading for visability (Fake AO) (store a depth pass, then do a color pass???)
-				}
-
-				sf::Color finalWallColor(	// for something better, see https://www.alanzucconi.com/2016/01/06/colour-interpolation/
-					(wallColor.r + (fogColor.r - wallColor.r) * fogMix),
-					(wallColor.g + (fogColor.g - wallColor.g) * fogMix),
-					(wallColor.b + (fogColor.b - wallColor.b) * fogMix)
-				);
-
-				// Draw colors to screen
-				for( int y = 0; y < vScreen.y; y++ ) {
-					if( y > drawStart && y <= drawEnd ) buffer.setPixel( x, y, finalWallColor );
-					else if( y > (vScreen.y/2) ) buffer.setPixel( x, y, floorColor );
-					else buffer.setPixel( x, y, skyColor );
-				}
+				glEnd();
 
 			}
 
 		}
 
-		// window.close();
-
-        // Update Texture to new bugger
-		texture.update( buffer );
-
         // Display
-		window.draw( bufferSprite );
 		window.display();
 
 	}

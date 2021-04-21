@@ -1,5 +1,5 @@
 LIBS= -lsfml-graphics -lsfml-window -lsfml-system
-OPENGL= -lGLEW -lGL
+OPENGL = -lGL -lGLU -lglut
 
 all:
 	@echo "Building the game engine..."
@@ -11,11 +11,9 @@ dda:
 	g++ -c dda.cpp -o dda.o
 	g++ -o dda.out dda.o $(LIBS) $(OPENGL)
 
-test:
-	@echo "Building DDA test..."
-	g++ -c dda-new.cpp -o dda.o
-	g++ -o dda.out dda.o $(LIBS)
-
+opengl:
+	@echo "Building OpenGL test..."
+	g++ -o opengl.out opengl.cpp $(LIBS) $(OPENGL)
 
 clean:
 	@echo "Removing objects files and executable..."
