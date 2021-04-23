@@ -132,30 +132,24 @@ int main() {
 		*/
 		//window.clear();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		/*
 			Floor & Ceiling Intersection Detection
 		*/
-		/*
-		glColor3f( 1.0, 1.0, 1.0 );
+		glBegin(GL_QUADS);
 
-		for( int y = 0; y < vScreen.y; y++ ) {
+			glColor3f(1,1,1);
+			glVertex2f( 0.0, 0.0 );
+			glColor3f(1,1,1);
+			glVertex2f( 1.0, 0.0 );
+			glColor3f(1,1,1);
+			glVertex2f( 1.0, 1.0 );
+			glColor3f(1,1,1);
+			glVertex2f( 0.0, 1.0 );
 
-			if( y > vScreen.y / 2 ) {
+		glEnd();
 
-				float fRayAngle = (fPlayerA - fFOV/2.0f) + ((float)x / (float)vScreen.x) * fFOV;
-				sf::Vector2f vRayDir = sf::Vector2f( cos( fRayAngle ), sin( fRayAngle ) );
-
-				glTexCoord2f( fmod( vIntersection.y, 1.0 ), 0.0 );
-				glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-				glTexCoord2f( fmod( vIntersection.y, 1.0 ), 1.0 );
-				glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
-
-			}
-
-		}*
-		/
 
 		/*
 			DDA - Wall Intersection Detection

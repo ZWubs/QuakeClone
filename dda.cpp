@@ -134,6 +134,8 @@ int main() {
 		int iSide = 0;
 		int iWallHeight = 0;
 
+
+
 		for( int x = 0; x < vScreen.x; x++ ) {
 
 			vMapPosition = sf::Vector2i( vPlayer );
