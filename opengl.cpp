@@ -14,6 +14,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
+#include "classes/tileset.cpp"
+
 using namespace std;
 
 /*
@@ -53,8 +55,8 @@ int main() {
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
+	map += L"#...............";
+	map += L"#...............";
 	map += L"#..............#";
 	map += L"#..............#";
 	map += L"#.#.#..........#";
@@ -63,30 +65,16 @@ int main() {
 	map += L"#..............#";
 	map += L"################";
 
-	sf::Image img_data;
-	if (!img_data.loadFromFile("./img/stone.png")) {
-	    cout << "Could not load ./img/square.png" << endl;
-	    return false;
-	}
+	sf::Texture stoneTexture;
+	stoneTexture.loadFromFile("./img/stone.png");
 
-	sf::Vector2u img_size = img_data.getSize();
+	Tileset mapTileset = Tileset( "./img/tiles.png", sf::Vector2i( 16, 16 ) );
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
+	Tileset skyTileset = Tileset( "./img/skybox.png", sf::Vector2i( 320, 128 ) );
 
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGBA,
-		img_size.x, img_size.y,
-		0,
-		GL_RGBA, GL_UNSIGNED_BYTE, img_data.getPixelsPtr()
-	);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//sf::Texture skyTexture;
+	//skyTexture.loadFromFile("./img/skybox.png");
+	//skyTexture.setRepeated( true );
 
 	glEnable(GL_TEXTURE_2D);
 
@@ -130,23 +118,22 @@ int main() {
 		/*
 			Clear
 		*/
-		//window.clear();
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		/*
 			Floor & Ceiling Intersection Detection
 		*/
+
+		sf::Texture::bind(&skyTileset.tTexture);
+
+		UV skyUV = skyTileset.getUVs( sf::Vector2f( fPlayerA / (2 * PI), 0.0 ) );
 		glBegin(GL_QUADS);
 
-			glColor3f(1,1,1);
-			glVertex2f( 0.0, 0.0 );
-			glColor3f(1,1,1);
-			glVertex2f( 1.0, 0.0 );
-			glColor3f(1,1,1);
-			glVertex2f( 1.0, 1.0 );
-			glColor3f(1,1,1);
-			glVertex2f( 0.0, 1.0 );
+		glTexCoord2f(skyUV.RB.x, 1.0); glVertex2f( 1, 0 );
+		glTexCoord2f(skyUV.LB.x, 1.0); glVertex2f( -1, 0 );
+		glTexCoord2f(skyUV.LT.x, 0.0); glVertex2f( -1, 1 );
+		glTexCoord2f(skyUV.RT.x, 0.0); glVertex2f( 1, 1 );
 
 		glEnd();
 
@@ -234,23 +221,25 @@ int main() {
 
 				fRayDistance *= cosf( fPlayerA - fRayAngle );
 
+				sf::Texture::bind(&mapTileset.tTexture);
+
+				UV mapUV = mapTileset.getUVs( sf::Vector2f( 0.0, 0.0 ) );
+
 				glLineWidth(2);
 
 				// Wall
 				glBegin(GL_LINES);
 
 					if( iSide == 0 ) {
-						glColor3f(0.75,0.75,0.75);
-						glTexCoord2f( fmod( vIntersection.y, 1.0 ), 0.0 );
+						glTexCoord2f( mapUV.LT.x, 0.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( fmod( vIntersection.y, 1.0 ), 1.0 );
+						glTexCoord2f( mapUV.LB.x, 1.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 					else {
-						glColor3f(1,1,1);
-						glTexCoord2f( fmod( vIntersection.x, 1.0 ), 0.0 );
+						glTexCoord2f( mapUV.LT.x, 0.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( fmod( vIntersection.x, 1.0 ), 1.0 );
+						glTexCoord2f( mapUV.LB.x, 1.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 

@@ -29,6 +29,7 @@ using namespace sf;
 */
 #include "classes/camera.cpp"
 #include "classes/scene.cpp"
+#include "classes/tileset.cpp"
 
 /*
 	Main
