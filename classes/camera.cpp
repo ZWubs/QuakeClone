@@ -4,13 +4,13 @@ using namespace sf;
 
 class Camera {
 
-    private:
+private:
     float fFov;
     Vector2i vResolution;
     Vector2f vPosition;
     Vector2f vPlane;
 
-    public:
+public:
     Camera();
 
     Vector2f getRayDir( float a, int x );

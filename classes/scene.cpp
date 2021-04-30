@@ -5,7 +5,8 @@ using namespace sf;
 class Scene {
 
     private:
-    float fFov;
+    Entity[] entities;
+    Tileset[] tilesets;
 
     public:
     Scene();

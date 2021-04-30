@@ -10,13 +10,16 @@ class Tileset {
     Vector2i vDimensions;
     Vector2i vTile;
 
+    Vector2f indexToVector( int iIndex );
+
     public:
     Tileset( std::string url, Vector2i tileSize );
     Texture tTexture;
 
     void loadTexture( std::string url );
     Texture getTexture();
-    UV getUVs( Vector2f vOffset );
+    UV getSquareUV( Vector2f vOffset );
+    UV getSliverUV( float iIndex, Vector2f vOffset );
 
 };
 
@@ -38,7 +41,29 @@ void Tileset::loadTexture( std::string url ) {
 
 }
 
-UV Tileset::getUVs( Vector2f vOffset ) {
+Vector2f Tileset::indexToVector( int iIndex ) {
+
+    return Vector2f(
+        ( iIndex % vTile.x ) * vTile.x,
+        ( iIndex / vTile.y ) * vTile.y
+    );
+
+}
+
+UV Tileset::getSquareUV( Vector2f vOffset ) {
+
+    UV uv(
+        (float)vOffset.x * vTile.x / vDimensions.x,
+        ( vDimensions.y - (float)vOffset.y * vTile.y ) / vDimensions.y,
+        ( (float)vOffset.x * vTile.x + vTile.x ) / vDimensions.x,
+        ( vDimensions.y - (float)vOffset.y * vTile.y - vTile.y ) / vDimensions.y
+    );
+
+    return uv;
+
+}
+
+UV Tileset::getSliverUV( float iIndex, Vector2f vOffset ) {
 
     UV uv(
         (float)vOffset.x * vTile.x / vDimensions.x,

@@ -1,5 +1,6 @@
 // STD Classes
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #define PI 3.1415926535
 
@@ -7,6 +8,11 @@
 #include <GL/glut.h>
 // Ubuntu: sudo apt-get install freeglut3-dev
 // Fedora/RedHat: sudo yum install freeglut-devel
+
+// JSON
+#include "include/json.hpp"
+
+using json = nlohmann::json;
 
 // SFML
 #include <SFML/Window.hpp>
@@ -23,11 +29,11 @@ using namespace std;
 */
 
 sf::Vector2i vScreen( 320, 240 );
-sf::Vector2i vMap( 16, 16 );
+sf::Vector2i vMap( 4, 4 );
 
-sf::Vector2f vPlayer( 8.0, 8.0 );
+sf::Vector2f vPlayer( 2.0, 2.0 );
 float fPlayerA = 1.0f;			// Player Start Rotation
-float fFOV = 3.14159f / 2.5f;	// Field of View (3.14159f / 4.0f; = 45deg fov)
+float fFOV = 3.14159f / 3.0f;	// Field of View (3.14159f / 4.0f; = 45deg fov)
 float fRenderDistance = 16.0f;	// Maximum rendering distance
 float fSpeed = 2.0f;			// Walking Speed
 
@@ -39,6 +45,12 @@ sf::Color fogColor(0, 100, 200);
 
 int main() {
 
+	ifstream ifs("./game/map.json");
+	json jf = json::parse(ifs);
+
+	std::vector<std::string> map;
+	map = jf["map"].get<std::vector<std::string>>();
+
 	sf::RenderWindow window(sf::VideoMode( vScreen.x, vScreen.y), "DDA Ray Casting" , sf::Style::Close );
 
 	window.setFramerateLimit( 30 );
@@ -46,24 +58,6 @@ int main() {
 	window.setActive( true );
 
 	glClearColor(1.0,0.3,0.3,1.0);
-
-	wstring map;
-	map += L"################";
-	map += L"#..............#";
-	map += L"#.........######";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#...............";
-	map += L"#...............";
-	map += L"#..............#";
-	map += L"#..............#";
-	map += L"#.#.#..........#";
-	map += L"#..............#";
-	map += L"#.#.#..........#";
-	map += L"#..............#";
-	map += L"################";
 
 	sf::Texture stoneTexture;
 	stoneTexture.loadFromFile("./img/stone.png");
@@ -81,7 +75,7 @@ int main() {
 	// deltaTime Clock
 	sf::Clock deltaClock;
 
-	while (window.isOpen()) {
+	while ( window.isOpen() ) {
 
 		sf::Time dt = deltaClock.restart();
 
@@ -109,10 +103,10 @@ int main() {
 			if( sf::Keyboard::isKeyPressed(sf::Keyboard::S) == true ) { sign = -sign; }
 			vPlayer.x += cosf(fPlayerA) * fSpeed * sign;
 			vPlayer.y += sinf(fPlayerA) * fSpeed * sign;
-			if (map.c_str()[(int)vPlayer.y * vMap.y + (int)vPlayer.x] == '#') {
-				vPlayer.x -= cosf(fPlayerA) * fSpeed * sign;
-				vPlayer.y -= sinf(fPlayerA) * fSpeed * sign;
-			}
+			// if (map.c_str()[(int)vPlayer.y * vMap.y + (int)vPlayer.x] == '#') {
+			// 	vPlayer.x -= cosf(fPlayerA) * fSpeed * sign;
+			// 	vPlayer.y -= sinf(fPlayerA) * fSpeed * sign;
+			// }
 		}
 
 		/*
@@ -127,7 +121,7 @@ int main() {
 
 		sf::Texture::bind(&skyTileset.tTexture);
 
-		UV skyUV = skyTileset.getUVs( sf::Vector2f( fPlayerA / (2 * PI), 0.0 ) );
+		UV skyUV = skyTileset.getSquareUV( sf::Vector2f( fPlayerA / (2 * PI), 0 ) );
 		glBegin(GL_QUADS);
 
 		glTexCoord2f(skyUV.RB.x, 1.0); glVertex2f( 1, 0 );
@@ -202,7 +196,9 @@ int main() {
 
 				if( ( ( vMapPosition.x >= 0 ) && ( vMapPosition.x < vMap.x ) ) && ( ( vMapPosition.y >= 0 ) && ( vMapPosition.y < vMap.y ) ) ) {
 
-					if ( map.c_str()[ vMapPosition.y * vMap.y + vMapPosition.x ] == '#' ) {
+					std::string layer = jf["map"][ vMapPosition.y ];
+
+					if ( layer.at(vMapPosition.x) == '#' ) {
 
 						bWallHit = true;
 
@@ -223,7 +219,7 @@ int main() {
 
 				sf::Texture::bind(&mapTileset.tTexture);
 
-				UV mapUV = mapTileset.getUVs( sf::Vector2f( 0.0, 0.0 ) );
+				UV mapUV = mapTileset.getSquareUV( sf::Vector2f( 0.0, 0.0 ) );
 
 				glLineWidth(2);
 
@@ -231,15 +227,15 @@ int main() {
 				glBegin(GL_LINES);
 
 					if( iSide == 0 ) {
-						glTexCoord2f( mapUV.LT.x, 0.0 );
+						glTexCoord2f( 0.0, 0.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( mapUV.LB.x, 1.0 );
+						glTexCoord2f( 0.0, 1.0 );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 					else {
-						glTexCoord2f( mapUV.LT.x, 0.0 );
+						glTexCoord2f( mapUV.LT.x, mapUV.LT.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( mapUV.LB.x, 1.0 );
+						glTexCoord2f( mapUV.LB.x, mapUV.LB.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 

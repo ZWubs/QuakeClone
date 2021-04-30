@@ -1,0 +1,10 @@
+{
+
+    "url": "./img/tiles.png",
+
+    "tiles": {
+        "dirt": [0,0],
+        "grass": [1,0]
+    }
+
+}
