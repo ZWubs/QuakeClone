@@ -19,7 +19,7 @@ class Tileset {
     void loadTexture( std::string url );
     Texture getTexture();
     UV getSquareUV( Vector2f vOffset );
-    UV getSliverUV( float iIndex, Vector2f vOffset );
+    UV getSliverUV( int iIndex, float fOffset );
 
 };
 
@@ -44,8 +44,8 @@ void Tileset::loadTexture( std::string url ) {
 Vector2f Tileset::indexToVector( int iIndex ) {
 
     return Vector2f(
-        ( iIndex % vTile.x ) * vTile.x,
-        ( iIndex / vTile.y ) * vTile.y
+        ( iIndex % ( vDimensions.x / vTile.x ) ),
+        ( iIndex / ( vDimensions.y / vTile.y ) )
     );
 
 }
@@ -63,13 +63,19 @@ UV Tileset::getSquareUV( Vector2f vOffset ) {
 
 }
 
-UV Tileset::getSliverUV( float iIndex, Vector2f vOffset ) {
+/*
+    @param iIndex (int) index of tile
+    @param fOffset (float) float Offset of sliver
+*/
+UV Tileset::getSliverUV( int iIndex, float fOffset ) {
+
+    Vector2f vTileOffset = indexToVector( iIndex );
 
     UV uv(
-        (float)vOffset.x * vTile.x / vDimensions.x,
-        ( vDimensions.y - (float)vOffset.y * vTile.y ) / vDimensions.y,
-        ( (float)vOffset.x * vTile.x + vTile.x ) / vDimensions.x,
-        ( vDimensions.y - (float)vOffset.y * vTile.y - vTile.y ) / vDimensions.y
+        ( (float)vTileOffset.x + fOffset ) * vTile.x / vDimensions.x,
+        ( (float)vTileOffset.y * vTile.y ) / vDimensions.y,
+        ( ( (float)vTileOffset.x + fOffset ) * vTile.x + vTile.x ) / vDimensions.x,
+        ( (float)vTileOffset.y * vTile.y + vTile.y ) / vDimensions.y
     );
 
     return uv;

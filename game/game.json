@@ -1,5 +1,14 @@
 {
 
-    "game": "Engine"
+    "game": "Engine",
+
+    "player": {
+        "position": [0,0],
+        "rotation": 0
+    }
+
+    "maps": [
+        "base": "./map.json"
+    ]
 
 }
