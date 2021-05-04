@@ -21,6 +21,7 @@ using json = nlohmann::json;
 #include <SFML/OpenGL.hpp>
 
 #include "classes/tileset.cpp"
+#include "classes/palette.cpp"
 
 using namespace std;
 
@@ -40,6 +41,14 @@ int main() {
 
 	sf::Vector2i vScreen( 320, 240 );
 	sf::Vector2i vMap( jf["dimensions"][0],  jf["dimensions"][1] );
+
+	Palette mapPalette;
+
+	for(auto &array : jf["palette"].items()) {
+		mapPalette.addTile( array.key(), Vector2i( array.value()[0], array.value()[1] ) );
+	    std::cout << array.key() << " " << array.value() << std::endl;    // returns string
+	}
+
 
 	sf::Vector2f vPlayer( 2.0, 2.0 );
 	float fPlayerA = 1.0f;			// Player Start Rotation
@@ -195,7 +204,7 @@ int main() {
 
 					std::string layer = jf["map"][ vMapPosition.y ];
 
-					if ( layer.at(vMapPosition.x) == '#' ) {
+					if ( layer.at(vMapPosition.x) != ' ' ) {
 
 						bWallHit = true;
 
@@ -221,15 +230,22 @@ int main() {
 				// Wall
 				glBegin(GL_LINES);
 
+				std::string mapString = "";
+				std::string row( jf["map"][ vMapPosition.y ] );
+				char mapChar = row.at( vMapPosition.x );
+				mapString += mapChar;
+				PaletteItem a = mapPalette.getTile( mapString );
+				Vector2i UVPosition = a.position;
+
 					if( iSide == 0 ) {
-						UV mapUV = mapTileset.getSliverUV( 0, fmod( vIntersection.y, 1.0 ) );
+						UV mapUV = mapTileset.getSliverUV( UVPosition, fmod( vIntersection.y, 1.0 ) );
 						glTexCoord2f( mapUV.LT.x, mapUV.LT.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
 						glTexCoord2f( mapUV.LB.x, mapUV.LB.y);
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 					else {
-						UV mapUV = mapTileset.getSliverUV( 1, fmod( vIntersection.x, 1.0 ) );
+						UV mapUV = mapTileset.getSliverUV( UVPosition, fmod( vIntersection.x, 1.0 ) );
 						glTexCoord2f( mapUV.LT.x, mapUV.LT.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
 						glTexCoord2f( mapUV.LB.x, mapUV.LB.y);

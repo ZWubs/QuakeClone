@@ -1,24 +1,53 @@
-#include <SFML/Graphics.hpp>
-
-#include "uv.cpp"
-
 using namespace sf;
 
-class Tileset {
+struct PaletteItem {
+    std::string id;
+    Vector2i position;
+};
+
+class Palette {
 
     private:
-    
+    PaletteItem items[256];
 
     public:
-    Tileset( std::string url, Vector2i tileSize );
+    Palette();
+    void addTile( std::string id, Vector2i position );
+    PaletteItem getTile( std::string id );
 
 };
 
 // Constructor
-Tileset::Tileset( std::string url, Vector2i tileSize ) {
+Palette::Palette() {}
 
-    loadTexture( url );
+void Palette::addTile( std::string id, Vector2i position ) {
 
-    vTile = Vector2i( tileSize );
+    for( int i = 0; i < 256; i++ ) {
+
+        if( items[i].id == "" ) {
+
+            items[i].id = id;
+            items[i].position = position;
+
+            break;
+
+        }
+
+    }
+
+}
+PaletteItem Palette::getTile( std::string id ) {
+
+    for( int i = 0; i < 256; i++ ) {
+
+        if( items[i].id == id ) {
+
+            return items[i];
+
+        }
+
+    }
+
+    return items[0];
 
 }
