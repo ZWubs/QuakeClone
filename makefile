@@ -4,7 +4,7 @@ OPENGL = -lGL -lGLU -lglut
 all:
 	@echo "Building the game engine..."
 	g++ -c main.cpp -o main.o
-	g++ -o engine.out main.o $(LIBS)
+	g++ -o engine.out main.o $(LIBS) $(OPENGL)
 
 dda:
 	@echo "Building DDA test..."

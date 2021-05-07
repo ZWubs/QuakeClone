@@ -1,5 +1,3 @@
-#include <SFML/Graphics.hpp>
-
 #include "uv.cpp"
 
 using namespace sf;
@@ -13,6 +11,7 @@ class Tileset {
     Vector2f indexToVector( int iIndex );
 
     public:
+    Tileset();
     Tileset( std::string url, Vector2i tileSize );
     Texture tTexture;
 
@@ -24,6 +23,8 @@ class Tileset {
 };
 
 // Constructor
+Tileset::Tileset() {}
+
 Tileset::Tileset( std::string url, Vector2i tileSize ) {
 
     loadTexture( url );

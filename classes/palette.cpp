@@ -1,7 +1,7 @@
 using namespace sf;
 
 struct PaletteItem {
-    std::string id;
+    char id = '\0';
     Vector2i position;
 };
 
@@ -13,7 +13,7 @@ class Palette {
     public:
     Palette();
     void addTile( std::string id, Vector2i position );
-    PaletteItem getTile( std::string id );
+    PaletteItem getTile( char id );
 
 };
 
@@ -24,9 +24,9 @@ void Palette::addTile( std::string id, Vector2i position ) {
 
     for( int i = 0; i < 256; i++ ) {
 
-        if( items[i].id == "" ) {
+        if( items[i].id == '\0' ) {
 
-            items[i].id = id;
+            items[i].id = id.at(0);
             items[i].position = position;
 
             break;
@@ -36,7 +36,7 @@ void Palette::addTile( std::string id, Vector2i position ) {
     }
 
 }
-PaletteItem Palette::getTile( std::string id ) {
+PaletteItem Palette::getTile( char id ) {
 
     for( int i = 0; i < 256; i++ ) {
 
