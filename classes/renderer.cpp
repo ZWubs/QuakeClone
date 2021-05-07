@@ -67,7 +67,7 @@ void Renderer::render( Camera c, Map m  ) {
         v.fRayAngle = ( c.fRotation - c.fFOV / 2.0f ) + ( (float)x / (float)c.vResolution.x ) * c.fFOV;
         v.vRayDir = Vector2f( cos( v.fRayAngle ), sin( v.fRayAngle ) );
 
-        v.vDeltaDistance = sf::Vector2f( abs(1.0f / v.vRayDir.x), abs( 1.0f / v.vRayDir.y ) );
+        v.vDeltaDistance = sf::Vector2f( abs( 1.0f / v.vRayDir.x), abs( 1.0f / v.vRayDir.y ) );
         v.vStep = sf::Vector2f( copysign( 1.0, v.vRayDir.x ), copysign( 1.0f, v.vRayDir.y ) );
 
         v.vSideDistance.x = ( v.vRayDir.x < 0 ) ? ( ( c.vPosition.x - v.vMapPosition.x ) * v.vDeltaDistance.x ) : ( ( v.vMapPosition.x + 1.0 - c.vPosition.x ) * v.vDeltaDistance.x );

@@ -122,7 +122,7 @@ void Game::loop() {
 		if( sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			cCamera.vPosition.x += cosf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
 			cCamera.vPosition.y += sinf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
-			if ( mMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition + cCamera.vRayDirection ) ) != ' ' ) {
+			if ( mMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) != ' ' ) {
 				cCamera.vPosition.x -= cosf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 				cCamera.vPosition.y -= sinf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 			}
