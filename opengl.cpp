@@ -21,33 +21,42 @@ using json = nlohmann::json;
 #include <SFML/OpenGL.hpp>
 
 #include "classes/tileset.cpp"
+#include "classes/palette.cpp"
 
 using namespace std;
 
-/*
-	Base Variables
-*/
-
-sf::Vector2i vScreen( 320, 240 );
-sf::Vector2i vMap( 4, 4 );
-
-sf::Vector2f vPlayer( 2.0, 2.0 );
-float fPlayerA = 1.0f;			// Player Start Rotation
-float fFOV = 3.14159f / 3.0f;	// Field of View (3.14159f / 4.0f; = 45deg fov)
-float fRenderDistance = 16.0f;	// Maximum rendering distance
-float fSpeed = 2.0f;			// Walking Speed
-
-// Default Colors
-sf::Color wallColor(250, 175, 175);
-sf::Color floorColor(20, 150, 50);
-sf::Color skyColor(0, 100, 200);
-sf::Color fogColor(0, 100, 200);
 
 int main() {
+
+	/*
+		JSON Unpacking
+	*/
 
 	ifstream ifs("./game/map.json");
 	json jf = json::parse(ifs);
 
+	/*
+		Base Variables
+	*/
+
+	sf::Vector2i vScreen( 320, 240 );
+	sf::Vector2i vMap( jf["dimensions"][0],  jf["dimensions"][1] );
+
+	Palette mapPalette;
+
+	for(auto &array : jf["palette"].items()) {
+		mapPalette.addTile( array.key(), Vector2i( array.value()[0], array.value()[1] ) );
+	    std::cout << array.key() << " " << array.value() << std::endl;    // returns string
+	}
+
+
+	sf::Vector2f vPlayer( 2.0, 2.0 );
+	float fPlayerA = 1.0f;			// Player Start Rotation
+	float fFOV = 3.14159f / 3.0f;	// Field of View (3.14159f / 4.0f; = 45deg fov)
+	float fRenderDistance = 16.0f;	// Maximum rendering distance
+	float fSpeed = 2.0f;			// Walking Speed
+
+	// Create Map
 	std::vector<std::string> map;
 	map = jf["map"].get<std::vector<std::string>>();
 
@@ -58,9 +67,6 @@ int main() {
 	window.setActive( true );
 
 	glClearColor(1.0,0.3,0.3,1.0);
-
-	sf::Texture stoneTexture;
-	stoneTexture.loadFromFile("./img/stone.png");
 
 	Tileset mapTileset = Tileset( "./img/tiles.png", sf::Vector2i( 16, 16 ) );
 
@@ -198,7 +204,7 @@ int main() {
 
 					std::string layer = jf["map"][ vMapPosition.y ];
 
-					if ( layer.at(vMapPosition.x) == '#' ) {
+					if ( layer.at(vMapPosition.x) != ' ' ) {
 
 						bWallHit = true;
 
@@ -219,23 +225,30 @@ int main() {
 
 				sf::Texture::bind(&mapTileset.tTexture);
 
-				UV mapUV = mapTileset.getSquareUV( sf::Vector2f( 0.0, 0.0 ) );
-
 				glLineWidth(2);
 
 				// Wall
 				glBegin(GL_LINES);
 
+				std::string mapString = "";
+				std::string row( jf["map"][ vMapPosition.y ] );
+				char mapChar = row.at( vMapPosition.x );
+				mapString += mapChar;
+				PaletteItem a = mapPalette.getTile( mapString );
+				Vector2i UVPosition = a.position;
+
 					if( iSide == 0 ) {
-						glTexCoord2f( 0.0, 0.0 );
+						UV mapUV = mapTileset.getSliverUV( UVPosition, fmod( vIntersection.y, 1.0 ) );
+						glTexCoord2f( mapUV.LT.x, mapUV.LT.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( 0.0, 1.0 );
+						glTexCoord2f( mapUV.LB.x, mapUV.LB.y);
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 					else {
+						UV mapUV = mapTileset.getSliverUV( UVPosition, fmod( vIntersection.x, 1.0 ) );
 						glTexCoord2f( mapUV.LT.x, mapUV.LT.y );
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, 1.0 / fRayDistance );
-						glTexCoord2f( mapUV.LB.x, mapUV.LB.y );
+						glTexCoord2f( mapUV.LB.x, mapUV.LB.y);
 						glVertex2f( (float)x / vScreen.x * 2.0 - 1.0, -1.0 / fRayDistance );
 					}
 
