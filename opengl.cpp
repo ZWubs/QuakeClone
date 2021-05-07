@@ -32,7 +32,7 @@ int main() {
 		JSON Unpacking
 	*/
 
-	ifstream ifs("./game/map.json");
+	ifstream ifs("./game/maps/map.json");
 	json jf = json::parse(ifs);
 
 	/*
