@@ -10,8 +10,8 @@
     },
 
     "maps": [
-        "./game/maps/base.json",
-        "./game/maps/puzzle.json"
+        "./game2-FieldDay/maps/shed.json",
+        "./game2-FieldDay/maps/field.json"
     ]
 
 }

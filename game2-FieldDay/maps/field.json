@@ -1,6 +1,6 @@
 {
 
-    "name": "base",
+    "name": "field",
     "texture": "./img/color.png",
     "tileset": [16,16],
 
