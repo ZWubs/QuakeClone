@@ -16,7 +16,6 @@ class Camera {
         Vector2f vRayDirection = Vector2f( 0.0f, 0.0f );
         float fSpeed = 2.0f;
 
-        void update();
         Vector2f getRayDir( float a, int x );
 
 };
@@ -31,9 +30,9 @@ Camera::Camera( Vector2i resolution ) {
 
 }
 
-void Camera::update() {
+Camera::update() {
 
-    vRayDirection = Vector2f( cos( fRotation ), sin( fRotation ) );
+    vRayDirection = Vector2f( cos( fRotation ), sin( fRotation );
 
 }
 
@@ -42,6 +41,6 @@ Vector2f Camera::getRayDir( float angle, int x ) {
 
     float fRayAngle = ( angle - fFOV / 2.0f ) + ( (float)x / (float)vResolution.x ) * fFOV;
 
-    return Vector2f( cos( fRayAngle ), sin( fRayAngle ) );
+    return Vector2f( cos( fRayAngle ), sin( fRayAngle );
 
 }

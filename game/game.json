@@ -2,7 +2,7 @@
 
     "title": "Raycaster",
 
-    "window": [320,240],
+    "window": [640,480],
 
     "player": {
         "position": [2.0,2.0],

@@ -1,7 +1,7 @@
 {
 
     "name": "base",
-    "texture": "./img/color.png",
+    "texture": "./game/img/color.png",
     "tileset": [16,16],
 
     "palette": {
@@ -12,7 +12,7 @@
         "w": [0,1],
         "l": [1,1],
         "d": [2,1],
-        "g": [3,1]
+        "k": [3,1]
     },
 
     "warps": [],
@@ -22,7 +22,7 @@
     "map": [
         "llllllllllllllll",
         "l              l",
-        "l              l",
+        "l r g b y      l",
         "l              l",
         "l              l",
         "l              l",

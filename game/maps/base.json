@@ -1,7 +1,7 @@
 {
 
     "name": "base",
-    "texture": "./img/tiles.png",
+    "texture": "./game/img/tiles.png",
     "tileset": [16,16],
 
     "palette": {
@@ -13,9 +13,9 @@
 
     "warps": [
         {
-            "pos": [5,1],
+            "from": [5,1],
             "map": 1,
-            "warp": [1,1]
+            "to": [2,2]
         }
     ],
 

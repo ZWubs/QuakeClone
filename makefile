@@ -16,5 +16,9 @@ opengl:
 	g++ -o opengl.out opengl.cpp $(LIBS) $(OPENGL)
 
 clean:
-	@echo "Removing objects files and executable..."
+	@echo "Removing objects files and executables..."
+	rm -f engine.out *.o *.out
+
+clean-o:
+	@echo "Removing objects files..."
 	rm -f engine.out *.o
