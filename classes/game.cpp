@@ -15,6 +15,7 @@ using json = nlohmann::json;
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <SFML/OpenGL.hpp>
 
 using namespace sf;
@@ -34,7 +35,8 @@ class Game {
     Renderer rRenderer;
     Camera cCamera;
     Clock cClock;
-    Map *mMaps;
+    Map *aMaps;
+    Music *aMusic;
     int currentMap = 0;
 
     public:
@@ -84,14 +86,23 @@ Game::Game( std::string url ) {
 
     cCamera.fRotation = j["player"]["rotation"];
 
-    // Setup & Load Maps & Warps
-    mMaps = new Map[ j["maps"].size() ];
+    // Load Map Music
+    aMusic = new Music[ j["music"].size() ];
 
-    for( auto &array : j["maps"].items() ) {
-        mMaps[ std::stoi( array.key() ) ] = Map( array.value() );
+    for( auto &array : j["music"].items() ) {
+        std::string url = array.value();
+        aMusic[ std::stoi( array.key() ) ].openFromFile( url );
     }
 
-    mMaps[currentMap].activate();
+    // Setup & Load Maps & Warps
+    aMaps = new Map[ j["maps"].size() ];
+
+    for( auto &array : j["maps"].items() ) {
+        aMaps[ std::stoi( array.key() ) ] = Map( array.value() );
+    }
+
+    aMaps[currentMap].activate();
+    aMusic[currentMap].play();
 
 }
 
@@ -122,17 +133,21 @@ void Game::loop() {
 		if( sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			cCamera.vPosition.x += cosf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
 			cCamera.vPosition.y += sinf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
-			if ( mMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) != ' ' ) {
+			if ( aMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) != ' ' ) {
 				cCamera.vPosition.x -= cosf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 				cCamera.vPosition.y -= sinf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 			}
 		}
 
-        Warp newWarp = mMaps[ currentMap ].checkWarps( cCamera.vPosition );
+        Warp newWarp = aMaps[ currentMap ].checkWarps( cCamera.vPosition );
 
         if( newWarp.map != -1 ) {
+            if( aMaps[ currentMap ].iMusic != aMaps[ newWarp.map ].iMusic ) {
+                aMusic[ aMaps[ currentMap ].iMusic ].stop();
+                aMusic[ aMaps[ newWarp.map ].iMusic ].play();
+            }
             currentMap = newWarp.map;
-            mMaps[currentMap].activate();
+            aMaps[currentMap].activate();
             cCamera.vPosition.x = newWarp.to.x;
             cCamera.vPosition.y = newWarp.to.y;
         }
@@ -140,7 +155,7 @@ void Game::loop() {
         // Clear Screen
         glClear(GL_COLOR_BUFFER_BIT);
 
-        rRenderer.render( cCamera, mMaps[ currentMap ] );
+        rRenderer.render( cCamera, aMaps[ currentMap ] );
 
         // Display
 		wWindow.display();

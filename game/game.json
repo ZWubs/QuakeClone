@@ -12,6 +12,10 @@
     "maps": [
         "./game/maps/base.json",
         "./game/maps/puzzle.json"
+    ],
+
+    "music": [
+        "./game/sound/lostwoods.ogg"
     ]
 
 }

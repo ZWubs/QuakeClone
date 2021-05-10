@@ -4,6 +4,8 @@
     "texture": "./game/img/color.png",
     "tileset": [16,16],
 
+    "music": 0,
+
     "palette": {
         "r": [0,0],
         "g": [1,0],
