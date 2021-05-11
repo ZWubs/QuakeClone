@@ -1,7 +1,7 @@
 {
 
     "title": "Field Day",
-	"description": "Help Lawn Mmower Man clear his yard",
+    "description": "Help Lawn Mower Man clear his yard",
 
     "window": [640,480],
 
@@ -10,9 +10,15 @@
         "rotation": 1.57
     },
 
-    "maps": [
+	"maps": [
         "./game2-FieldDay/maps/shed.json",
         "./game2-FieldDay/maps/field.json"
+    ],
+
+	"music": [
+        "./game2-FieldDay/sound/Blippy Trance - inchompotech.ogg"
     ]
+
+
 
 }

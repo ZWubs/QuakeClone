@@ -4,6 +4,8 @@
     "texture": "./img/tiles.png",
     "tileset": [16,16],
 
+	"music": 0,
+
 	"updatefn": {
 		"path": "./game2-FieldDay/cpp/update.cpp",
 		"function": "update()"

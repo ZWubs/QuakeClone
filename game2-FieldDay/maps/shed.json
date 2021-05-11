@@ -4,6 +4,8 @@
     "texture": "./img/tiles.png",
     "tileset": [16,16],
 
+	"music": 0,
+
     "palette": {
         "#": [1,2],
         "%": [2,0]
