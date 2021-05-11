@@ -14,7 +14,7 @@ class Camera {
         Vector2f vPosition = Vector2f( 0.0f, 0.0f );
         float fRotation = 0.0f;
         Vector2f vRayDirection = Vector2f( 0.0f, 0.0f );
-        float fSpeed = 2.0f;
+        float fSpeed = 2.5f;
 
         void update();
         Vector2f getRayDir( float a, int x );

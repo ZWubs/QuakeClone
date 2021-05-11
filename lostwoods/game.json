@@ -1,0 +1,22 @@
+{
+
+    "title": "Lost Woods",
+
+    "window": [320,240],
+
+    "player": {
+        "position": [3.5,4.5],
+        "rotation": 0.0
+    },
+
+    "maps": [
+        "./lostwoods/maps/intro.json",
+        "./lostwoods/maps/woods.json"
+    ],
+
+    "music": [
+        "./lostwoods/sound/forest.ogg",
+        "./lostwoods/sound/woods.ogg"
+    ]
+
+}

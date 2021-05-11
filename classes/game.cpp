@@ -74,13 +74,16 @@ Game::Game( std::string url ) {
 
 	wWindow.setActive( true );
 
-	glClearColor(1.0,0.3,0.3,1.0);
+	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 
     glEnable(GL_TEXTURE_2D);
-    glLineWidth(2);
+    glLineWidth(1);
 
 
     // Setup Player
+    cCamera.vResolution.x = j["window"][0];
+    cCamera.vResolution.y = j["window"][1];
+
     cCamera.vPosition.x = j["player"]["position"][0];
     cCamera.vPosition.y = j["player"]["position"][1];
 
@@ -116,6 +119,8 @@ void Game::loop() {
 		while ( wWindow.pollEvent( event ) ) {
 			if ( event.type == sf::Event::Closed )
 				wWindow.close();
+            else if (event.type == sf::Event::Resized)
+                glViewport(0, 0, event.size.width, event.size.height);
 		}
 
         // Keyboard Inputs
@@ -145,11 +150,13 @@ void Game::loop() {
             if( aMaps[ currentMap ].iMusic != aMaps[ newWarp.map ].iMusic ) {
                 aMusic[ aMaps[ currentMap ].iMusic ].stop();
                 aMusic[ aMaps[ newWarp.map ].iMusic ].play();
+                aMusic[ aMaps[ newWarp.map ].iMusic ].setLoop( true );
             }
             currentMap = newWarp.map;
             aMaps[currentMap].activate();
-            cCamera.vPosition.x = newWarp.to.x;
-            cCamera.vPosition.y = newWarp.to.y;
+            cCamera.vPosition.x = newWarp.to.x + 0.5f;
+            cCamera.vPosition.y = newWarp.to.y + 0.5f;
+            cCamera.fRotation = newWarp.rotation * ( 3.14159f / 2.0f );
         }
 
         // Clear Screen
