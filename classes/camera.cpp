@@ -18,6 +18,7 @@ class Camera {
 
         void update();
         Vector2f getRayDir( float a, int x );
+		Vector2i tilePosition();
 
 };
 
@@ -44,4 +45,8 @@ Vector2f Camera::getRayDir( float angle, int x ) {
 
     return Vector2f( cos( fRayAngle ), sin( fRayAngle ) );
 
+}
+
+Vector2i Camera::tilePosition() {
+	return Vector2i( floor(vPosition.x), floor(vPosition.y) );
 }

@@ -13,13 +13,14 @@ struct Warp {
 class Map {
 
     private:
-    std::string sName;
+	// std::string sName;
     std::string sUrl;
     Vector2i vDimensions;
     std::vector<std::string> vsMap;
     std::vector<Warp> wWarps;
 
     public:
+	std::string sName;
     Map();
     Map( std::string src );
     void activate();
@@ -31,6 +32,8 @@ class Map {
     UV getTileUV( Vector2i position, float intersection );
 
     Warp checkWarps( Vector2f position );
+
+	void destroyTile( Vector2i position );
 
     Tileset tTileset;
     Palette pPalette;
@@ -136,4 +139,11 @@ UV Map::getTileUV( Vector2i position, float intersection ) {
 
     return tTileset.getSliverUV( piTile.position, fmod( intersection, 1.0 ) );
 
+}
+
+// void Map::newWall( Vector2i position, int iPalette ){}
+
+void Map::destroyTile( Vector2i position ) {
+	// vsMap[ position.y ].at( position.x ) = " ";
+	vsMap[ position.y ].replace( position.x, 1, " ");
 }
