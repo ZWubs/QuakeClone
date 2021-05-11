@@ -1,41 +1,49 @@
 {
 
     "name": "field",
-    "texture": "./img/color.png",
+    "texture": "./img/tiles.png",
     "tileset": [16,16],
 
+	"music": 0,
+
+	"updatefn": {
+		"path": "./game2-FieldDay/cpp/update.cpp",
+		"function": "update()"
+	},
+
     "palette": {
-        "r": [0,0],
-        "g": [1,0],
-        "b": [2,0],
-        "y": [3,0],
-        "w": [0,1],
-        "l": [1,1],
-        "d": [2,1],
-        "g": [3,1]
+		"d": [1,2],
+        "s": [1,1],
+        "g": [2,0]
     },
 
-    "warps": [],
+    "warps": [
+        {
+            "from": [8,1],
+            "map": 0,
+            "to": [3,3]
+        }
+    ],
 
-    "dimensions": [16,16],
+    "dimensions": [17,17],
 
     "map": [
-        "llllllllllllllll",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "llllllllllllllll"
+        "ssssssssdssssssss",
+        "ssssssss ssssssss",
+        "sggggg     gggggs",
+        "sggggg     gggggs",
+        "sgggggg   ggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sgggggggggggggggs",
+        "sssssssssssssssss"
     ]
 
 }

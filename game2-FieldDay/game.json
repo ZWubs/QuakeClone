@@ -1,17 +1,24 @@
 {
 
-    "title": "Raycaster",
+    "title": "Field Day",
+    "description": "Help Lawn Mower Man clear his yard",
 
-    "window": [320,240],
+    "window": [640,480],
 
     "player": {
-        "position": [2.0,2.0],
-        "rotation": 0.0
+        "position": [3.5,2.0],
+        "rotation": 1.57
     },
 
-    "maps": [
+	"maps": [
         "./game2-FieldDay/maps/shed.json",
         "./game2-FieldDay/maps/field.json"
+    ],
+
+	"music": [
+        "./game2-FieldDay/sound/Blippy Trance - inchompotech.ogg"
     ]
+
+
 
 }
