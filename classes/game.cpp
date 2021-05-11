@@ -101,8 +101,12 @@ Game::Game( std::string url ) {
         aMaps[ std::stoi( array.key() ) ] = Map( array.value() );
     }
 
+	// Vector2i position{ x:3, y:0 };
+	// aMaps[currentMap].destroyTile( position );
+
     aMaps[currentMap].activate();
     aMusic[currentMap].play();
+
 
 }
 
@@ -151,6 +155,24 @@ void Game::loop() {
             cCamera.vPosition.x = newWarp.to.x;
             cCamera.vPosition.y = newWarp.to.y;
         }
+
+		// --== Hardcoading for lawnmowing game. ==--
+		if (/*sTitle == "Field Day" && */aMaps[currentMap].sName == "field") {
+			// std::printf("it is\n");
+			// Clear grass from camera's 4 directions.
+			Vector2i pl = cCamera.tilePosition();	// pl = player location
+			// std::cout << pl.x << pl.y << "\n";
+			// std::cout << aMaps[currentMap].getChar(pl) << "\n";
+			// std::cout << aMaps[currentMap].getChar(Vector2i(pl.x+1, pl.y)) << "\n";
+			// std::cout << (aMaps[currentMap].getChar(Vector2i(pl.x+1, pl.y)) == 'g') << "\n";
+			// if ( aMaps[currentMap].getChar(Vector2i(pl.x+1, pl.y)) == 'g' ) { std::cout << "there's grass at x+1" << "\n"; }
+
+			if ( aMaps[currentMap].getChar(Vector2i(pl.x+1, pl.y)) == 'g' ) { aMaps[currentMap].destroyTile(Vector2i(pl.x+1, pl.y));  }
+			if ( aMaps[currentMap].getChar(Vector2i(pl.x-1, pl.y)) == 'g' ) { aMaps[currentMap].destroyTile(Vector2i(pl.x-1, pl.y)); }
+			if ( aMaps[currentMap].getChar(Vector2i(pl.x, pl.y+1)) == 'g' ) { aMaps[currentMap].destroyTile(Vector2i(pl.x, pl.y+1)); }
+			if ( aMaps[currentMap].getChar(Vector2i(pl.x, pl.y-1)) == 'g' ) { aMaps[currentMap].destroyTile(Vector2i(pl.x, pl.y-1)); }
+
+		}
 
         // Clear Screen
         glClear(GL_COLOR_BUFFER_BIT);
