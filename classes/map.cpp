@@ -34,6 +34,7 @@ class Map {
 
     Tileset tTileset;
     Palette pPalette;
+    int iMusic;
 
 };
 
@@ -59,6 +60,8 @@ Map::Map( std::string src ) {
 
     vDimensions.x = j["dimensions"][0];
     vDimensions.y = j["dimensions"][1];
+
+    iMusic = j["music"];
 
     for(auto &array : j["palette"].items()) {
 		pPalette.addTile( array.key(), Vector2i( array.value()[0], array.value()[1] ) );

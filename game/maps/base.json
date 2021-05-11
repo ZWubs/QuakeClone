@@ -4,6 +4,8 @@
     "texture": "./game/img/tiles.png",
     "tileset": [16,16],
 
+    "music": 0,
+
     "palette": {
         "#": [0,0],
         "$": [1,0],
