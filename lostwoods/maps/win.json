@@ -1,0 +1,32 @@
+{
+
+    "name": "woods1",
+    "texture": "./lostwoods/img/tiles.png",
+    "tileset": [16,16],
+
+    "music": 3,
+
+    "palette": {
+        "a": [0,3],
+        "b": [1,3],
+        "c": [2,3]
+    },
+
+    "doors": [],
+
+    "skyColor": [102,146,140],
+    "floorColor": [82,100,50],
+
+    "warps": [],
+
+    "dimensions": [5,5],
+
+    "map": [
+        " abc ",
+        "c   a",
+        "b   b",
+        "a   c",
+        " cba "
+    ]
+
+}

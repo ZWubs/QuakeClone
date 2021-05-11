@@ -1,46 +1,57 @@
 {
 
     "name": "base",
-    "texture": "./game/img/color.png",
+    "texture": "./lostwoods/img/fairy.png",
     "tileset": [16,16],
 
-    "music": 0,
+    "music": 2,
 
     "palette": {
-        "r": [0,0],
-        "g": [1,0],
-        "b": [2,0],
-        "y": [3,0],
-        "w": [0,1],
-        "l": [1,1],
-        "d": [2,1],
-        "k": [3,1]
+        "d": [2,0],
+        "s": [0,0],
+        "e": [0,1],
+        "m": [1,0],
+        "p": [1,1],
+        "g": [2,1],
+        "h": [3,1],
+        "q": [0,2],
+        "f": [1,2]
     },
 
+    "doors": ["d","f"],
+
     "skyColor": [0,0,0],
-    "floorColor": [255,255,255],
+    "floorColor": [138,138,138],
 
-    "warps": [],
+    "warps": [
+        {
+            "from": [5,10],
+            "map": 5,
+            "to": [1,4],
+            "rot": 2
+        },
+        {
+            "from": [5,0],
+            "map": 10,
+            "to": [1,1],
+            "rot": 0
+        }
+    ],
 
-    "dimensions": [16,16],
+    "dimensions": [11,11],
 
     "map": [
-        "llllllllllllllll",
-        "l              l",
-        "l r g b y      l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "l              l",
-        "llllllllllllllll"
+        "    pfp    ",
+        "  ee   eg  ",
+        " g       e ",
+        " e p   h e ",
+        "e         e",
+        "e         g",
+        "g         e",
+        " e       q ",
+        " q       q ",
+        "  sm   ss  ",
+        "    sdm    "
     ]
 
 }

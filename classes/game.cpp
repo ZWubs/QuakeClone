@@ -76,9 +76,7 @@ Game::Game( std::string url ) {
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 
-    glEnable(GL_TEXTURE_2D);
     glLineWidth(1);
-
 
     // Setup Player
     cCamera.vResolution.x = j["window"][0];
@@ -88,6 +86,7 @@ Game::Game( std::string url ) {
     cCamera.vPosition.y = j["player"]["position"][1];
 
     cCamera.fRotation = j["player"]["rotation"];
+    cCamera.fRotation *= ( 3.14159f / 2.0f );
 
     // Load Map Music
     aMusic = new Music[ j["music"].size() ];
@@ -142,7 +141,13 @@ void Game::loop() {
 		if( sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			cCamera.vPosition.x += cosf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
 			cCamera.vPosition.y += sinf(cCamera.fRotation) * cCamera.fSpeed * dt.asSeconds();
-			if ( aMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) != ' ' ) {
+            bool isDoor = false;
+            for( int i = 0; i < aMaps[ currentMap ].vcDoors.size(); i++ ) {
+                if( aMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) == aMaps[ currentMap ].vcDoors[ i ] )
+                    isDoor = true;
+            }
+
+			if ( !isDoor && aMaps[ currentMap ].getChar( Vector2i( cCamera.vPosition ) ) != ' ') {
 				cCamera.vPosition.x -= cosf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 				cCamera.vPosition.y -= sinf( cCamera.fRotation ) * cCamera.fSpeed * dt.asSeconds();
 			}
@@ -151,7 +156,10 @@ void Game::loop() {
         Warp newWarp = aMaps[ currentMap ].checkWarps( cCamera.vPosition );
 
         if( newWarp.map != -1 ) {
-            if( aMaps[ currentMap ].iMusic != aMaps[ newWarp.map ].iMusic ) {
+            if( aMaps[ currentMap ].iMusic == -1 ) {
+                aMusic[ aMaps[ currentMap ].iMusic ].stop();
+            }
+            else if( aMaps[ currentMap ].iMusic != aMaps[ newWarp.map ].iMusic ) {
                 aMusic[ aMaps[ currentMap ].iMusic ].stop();
                 aMusic[ aMaps[ newWarp.map ].iMusic ].play();
                 aMusic[ aMaps[ newWarp.map ].iMusic ].setLoop( true );

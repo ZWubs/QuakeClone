@@ -1,0 +1,54 @@
+{
+
+    "name": "woods1",
+    "texture": "./lostwoods/img/tiles.png",
+    "tileset": [16,16],
+
+    "music": 1,
+
+    "palette": {
+        "#": [0,0],
+        "d": [3,0]
+    },
+
+    "doors": ["d","b"],
+
+    "skyColor": [32,45,50],
+    "floorColor": [50,37,23],
+
+    "warps": [
+        {
+            "from": [2,8],
+            "map": 1,
+            "to": [4,7],
+            "rot": 3
+        },
+        {
+            "from": [0,1],
+            "map": 1,
+            "to": [4,7],
+            "rot": 3
+        },
+        {
+            "from": [4,1],
+            "map": 9,
+            "to": [2,2],
+            "rot": 3
+        }
+    ],
+
+    "dimensions": [5,9],
+
+    "map": [
+        "#####",
+        "d   d",
+        " # # ",
+        " # # ",
+        " # # ",
+        " # # ",
+        " # # ",
+        " # # ",
+        "  d  "
+    ]
+
+}

@@ -1,0 +1,28 @@
+{
+
+    "name": "lol",
+    "texture": "./lostwoods/img/monkey.png",
+    "tileset": [64,64],
+
+    "music": 4,
+
+    "palette": {
+        "#": [0,0]
+    },
+
+    "doors": [],
+
+    "skyColor": [0,0,0],
+    "floorColor": [0,0,0],
+
+    "warps": [],
+
+    "dimensions": [3,3],
+
+    "map": [
+        "###",
+        "# #",
+        "###"
+    ]
+
+}

@@ -38,8 +38,10 @@ class Map {
 
     Tileset tTileset;
     Palette pPalette;
-    int iMusic;
-    std::vector<float> viClearColor;
+    int iMusic = -1;
+    std::vector<char> vcDoors;
+    std::vector<float> viSkyColor;
+    std::vector<float> viFloorColor;
 
 };
 
@@ -66,11 +68,20 @@ Map::Map( std::string src ) {
     vDimensions.x = j["dimensions"][0];
     vDimensions.y = j["dimensions"][1];
 
-    iMusic = j["music"];
+    if( j.find("music") != j.end() )
+        iMusic = j["music"];
 
     for(auto &array : j["palette"].items()) {
 		pPalette.addTile( array.key(), Vector2i( array.value()[0], array.value()[1] ) );
 	}
+
+    if( j.find("doors") != j.end() ) {
+        for( int i = 0; i < j["doors"].size(); i++ ) {
+            std::string doorString = j["doors"][i];
+            char door = doorString.at(0);
+            vcDoors.push_back( door );
+        }
+    }
 
     for(auto &array : j["warps"].items()) {
         Warp warp;
@@ -80,11 +91,20 @@ Map::Map( std::string src ) {
         warp.to.x = val["to"][0];
         warp.to.y = val["to"][1];
         warp.map = val["map"];
-        warp.rotation = val["rot"];
+        if( val.find("rot") != val.end() )
+            warp.rotation = val["rot"];
         wWarps.push_back( warp );
 	}
 
-    viClearColor = j["clearColor"].get<std::vector<float>>();
+    if( j.find("skyColor") != j.end() )
+        viSkyColor = j["skyColor"].get<std::vector<float>>();
+    else
+        viSkyColor = { 0, 0, 0 };
+
+    if( j.find("floorColor") != j.end() )
+        viFloorColor = j["floorColor"].get<std::vector<float>>();
+    else
+        viFloorColor = { 0, 0, 0 };
 
 	vsMap = j["map"].get<std::vector<std::string>>();
 
@@ -94,9 +114,9 @@ Map::Map( std::string src ) {
 
 void Map::activate() {
 
-    sf::Texture::bind( &tTileset.tTexture );
+    glEnable(GL_TEXTURE_2D);
 
-    glClearColor( viClearColor[0] / 255.0f, viClearColor[1] / 255.0f, viClearColor[2] / 255.0f, 1.0 );
+    sf::Texture::bind( &tTileset.tTexture );
 
 }
 

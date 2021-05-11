@@ -85,12 +85,30 @@ void Renderer::render( Camera c, Map m  ) {
             if( r.iSide == 0 ) glColor3f( 1.0, 1.0, 1.0 );
             else glColor3f( 0.9, 0.9, 0.9 );
 
+            glEnable(GL_TEXTURE_2D);
+
             glBegin(GL_LINES);
 
             glTexCoord2f( uv.LT.x, uv.LT.y );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 / ( r.fRayDistance ) );
             glTexCoord2f( uv.LB.x, uv.LB.y );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 / ( r.fRayDistance ) );
+
+            glEnd();
+
+            glDisable(GL_TEXTURE_2D);
+
+            glBegin(GL_LINES); glColor3f( m.viSkyColor[0] / 255.0f, m.viSkyColor[1] / 255.0f, m.viSkyColor[2] / 255.0f );
+
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 );
+
+            glEnd();
+
+            glBegin(GL_LINES); glColor3f( m.viFloorColor[0] / 255.0f, m.viFloorColor[1] / 255.0f, m.viFloorColor[2] / 255.0f );
+
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 );
 
             glEnd();
 

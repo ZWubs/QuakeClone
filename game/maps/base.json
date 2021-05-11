@@ -13,7 +13,8 @@
         "@": [0,2]
     },
 
-    "clearColor": [0,0,0],
+    "skyColor": [38,65,57],
+    "floorColor": [89,65,45],
 
     "warps": [
         {

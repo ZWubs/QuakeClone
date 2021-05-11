@@ -11,12 +11,24 @@
 
     "maps": [
         "./lostwoods/maps/intro.json",
-        "./lostwoods/maps/woods.json"
+        "./lostwoods/maps/woods1.json",
+        "./lostwoods/maps/woods2.json",
+        "./lostwoods/maps/woods3.json",
+        "./lostwoods/maps/woods4.json",
+        "./lostwoods/maps/woods5.json",
+        "./lostwoods/maps/woods6.json",
+        "./lostwoods/maps/fairy.json",
+        "./lostwoods/maps/woods7.json",
+        "./lostwoods/maps/win.json",
+        "./lostwoods/maps/lol.json"
     ],
 
     "music": [
         "./lostwoods/sound/forest.ogg",
-        "./lostwoods/sound/woods.ogg"
+        "./lostwoods/sound/woods.ogg",
+        "./lostwoods/sound/fountain.ogg",
+        "./lostwoods/sound/win.ogg",
+        "./lostwoods/sound/lol.ogg"
     ]
 
 }
