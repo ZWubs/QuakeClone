@@ -8,7 +8,7 @@ class Camera {
         Camera();
         Camera( Vector2i vResolution );
 
-        float fFOV = 3.14159f / 3.0f;
+        float fFOV = 3.14159f / 2.0f;
 
         Vector2i vResolution = Vector2i( 320, 240 );
         Vector2f vPosition = Vector2f( 0.0f, 0.0f );

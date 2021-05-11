@@ -6,7 +6,7 @@
 
     "player": {
         "position": [3.5,4.5],
-        "rotation": 0.0
+        "rotation": 3
     },
 
     "maps": [

@@ -31,7 +31,7 @@ class Game {
     private:
     std::string sTitle;
 
-    Window wWindow;
+    RenderWindow wWindow;
     Renderer rRenderer;
     Camera cCamera;
     Clock cClock;
@@ -76,7 +76,7 @@ Game::Game( std::string url ) {
 
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 
-    glLineWidth(1);
+    glLineWidth(10);
 
     // Setup Player
     cCamera.vResolution.x = j["window"][0];

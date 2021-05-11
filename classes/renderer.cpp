@@ -87,10 +87,14 @@ void Renderer::render( Camera c, Map m  ) {
 
             glEnable(GL_TEXTURE_2D);
 
-            glBegin(GL_LINES);
+            glBegin(GL_QUADS);
 
             glTexCoord2f( uv.LT.x, uv.LT.y );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 / ( r.fRayDistance ) );
+            glTexCoord2f( uv.LT.x, uv.LT.y );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, 1.0 / ( r.fRayDistance ) );
+            glTexCoord2f( uv.LB.x, uv.LB.y );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, -1.0 / ( r.fRayDistance ) );
             glTexCoord2f( uv.LB.x, uv.LB.y );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 / ( r.fRayDistance ) );
 
@@ -98,16 +102,20 @@ void Renderer::render( Camera c, Map m  ) {
 
             glDisable(GL_TEXTURE_2D);
 
-            glBegin(GL_LINES); glColor3f( m.viSkyColor[0] / 255.0f, m.viSkyColor[1] / 255.0f, m.viSkyColor[2] / 255.0f );
+            glBegin(GL_QUADS); glColor3f( m.viSkyColor[0] / 255.0f, m.viSkyColor[1] / 255.0f, m.viSkyColor[2] / 255.0f );
 
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, 1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, 1.0 );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, 1.0 );
 
             glEnd();
 
-            glBegin(GL_LINES); glColor3f( m.viFloorColor[0] / 255.0f, m.viFloorColor[1] / 255.0f, m.viFloorColor[2] / 255.0f );
+            glBegin(GL_QUADS); glColor3f( m.viFloorColor[0] / 255.0f, m.viFloorColor[1] / 255.0f, m.viFloorColor[2] / 255.0f );
 
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, -1.0 / ( r.fRayDistance ) );
+            glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0 + 0.1, -1.0 );
             glVertex2f( (float)x / c.vResolution.x * 2.0 - 1.0, -1.0 );
 
             glEnd();
